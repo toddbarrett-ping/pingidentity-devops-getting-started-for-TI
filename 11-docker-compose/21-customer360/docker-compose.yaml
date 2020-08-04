@@ -1,0 +1,127 @@
+version: "2.4"
+# The server profiles used in this example are intended for use with edge versions of the product image only.
+
+#----------------------------------------------------------------------------------------------------------
+#- Ping Identity fullstack integrated demo
+#-
+#-     login  console            app                console           rest    ldaps            login
+#-     9031   9999               9022                 8443            1443    1636              8443
+#-      |      |                  |                    |               |       |                 |
+#-   +---------------+    +---------------+    +---------------+    +---------------+    +---------------+  
+#-   | PingFederate  |    |  PingCentral  |    |PingDataConsole|    | PingDirectory |    | PingDataSync  |
+#-   +---------------+    +---------------+    +---------------+    +---------------+    +---------------+ 
+#- 
+#-   +-----------------------+--------------------------------------------------------+
+#-   |  Product Console/App  |  URL                                                   |
+#-   |                       |    username: administrator                             |
+#-   |                       |    password: 2FederateM0re                             |
+#-   +-----------------------+--------------------------------------------------------+
+#-   |  PingFederate         |  https://localhost:9999/pingfederate/app               |
+#-   |  PingDirectory        |  https://localhost:8443/   (Server=pingdirectory)      |
+#-   |  PingDataConsole      |  https://localhost:8443/   (Server=pingdataconsole)    |
+#-   |  PingCentral          |  https://localhost:9022/   (Server=pingcentral)        |
+#-   |                       |    password: 2Federate                                 |
+#-   +-----------------------+--------------------------------------------------------+
+#----------------------------------------------------------------------------------------------------------
+
+services:
+  pingfederate:
+    image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingfederate:${PING_IDENTITY_DEVOPS_TAG}
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=getting-started/pingfederate
+    env_file:
+      - ${HOME}/.pingidentity/devops
+    ports:
+      - "9031:9031"
+      - "9999:9999"
+    networks:
+      - pingnet
+    volumes:
+      - pingfederate-out:/opt/out
+    #  - ${HOME}/projects/devops/pingidentity-server-profiles/baseline/pingfederate:/opt/in
+
+  pingdirectory:
+    image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingdirectory:${PING_IDENTITY_DEVOPS_TAG}
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=getting-started/pingdirectory
+    env_file:
+      - ${HOME}/.pingidentity/devops
+    ulimits:
+      nproc:
+        soft: 16384
+        hard: 16384
+      nofile:
+        soft: 65535
+        hard: 65535
+    ports:
+      - "1636:636"
+      - "1443:443"
+      - "1389:389"
+    networks:
+      - pingnet
+    volumes:
+      - pingdirectory-out:/opt/out
+    #  - ${HOME}/projects/devops/pingidentity-server-profiles/baseline/pingdirectory:/opt/in
+
+  pingdataconsole:
+    image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingdataconsole:${PING_IDENTITY_DEVOPS_TAG}
+    ports:
+      - "8443:8443"
+    networks:
+      - pingnet
+
+  pingcentral:
+    image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingcentral:${PING_IDENTITY_DEVOPS_TAG}
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=baseline/pingcentral/dev-unsecure     
+      #  note: path 
+      - SERVER_PROFILE_BRANCH=arno-dev-pingcentral
+      - PING_CENTRAL_BLIND_TRUST=true
+      - PING_CENTRAL_LOG_LEVEL=DEBUG
+    env_file:
+      - ${HOME}/.pingidentity/devops
+    ports:
+      - "9022:9022"
+    networks:
+      - pingnet
+    volumes:
+      - pingcentral-out:/opt/out
+    #  - ${HOME}/projects/devops/pingidentity-server-profiles/baseline/pingcentral:/opt/in
+
+  pingdatasync:
+    image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingdatasync:${PING_IDENTITY_DEVOPS_TAG}
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=simple-sync/pingdatasync
+      #  note: path 
+      - USER_BASE_DN=o=sync
+    env_file:
+      - ${HOME}/.pingidentity/devops
+    ulimits:
+      nproc:
+        soft: 16384
+        hard: 16384
+      nofile:
+        soft: 65535
+        hard: 65535
+    ports:
+      - "2636:636"
+      - "2443:443"
+    networks:
+      - pingnet
+    volumes:
+      - pingdatasync-out:/opt/out
+    #  - ${HOME}/projects/devops/pingidentity-server-profiles/simple-sync/pingdatasync:/opt/in
+
+
+networks:
+    pingnet:
+
+volumes:
+  pingfederate-out:
+  pingdirectory-out:
+  pingcentral-out:
+  pingdatasync-out:
