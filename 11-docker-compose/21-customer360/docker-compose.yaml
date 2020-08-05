@@ -30,6 +30,7 @@ services:
     environment:
       - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
       - SERVER_PROFILE_PATH=customer360/pingfederate
+      - SERVER_PROFILE_BRANCH=GDO-282_solutions
     env_file:
       - ${HOME}/.pingidentity/devops
     ports:
@@ -46,6 +47,7 @@ services:
     environment:
       - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
       - SERVER_PROFILE_PATH=customer360/pingdirectory
+      - SERVER_PROFILE_BRANCH=GDO-282_solutions
     env_file:
       - ${HOME}/.pingidentity/devops
     ulimits:
