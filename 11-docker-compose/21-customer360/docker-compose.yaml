@@ -29,7 +29,7 @@ services:
     image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingfederate:${PING_IDENTITY_DEVOPS_TAG}
     environment:
       - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
-      - SERVER_PROFILE_PATH=getting-started/pingfederate
+      - SERVER_PROFILE_PATH=customer360/pingfederate
     env_file:
       - ${HOME}/.pingidentity/devops
     ports:
@@ -45,7 +45,7 @@ services:
     image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingdirectory:${PING_IDENTITY_DEVOPS_TAG}
     environment:
       - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
-      - SERVER_PROFILE_PATH=getting-started/pingdirectory
+      - SERVER_PROFILE_PATH=customer360/pingdirectory
     env_file:
       - ${HOME}/.pingidentity/devops
     ulimits:
