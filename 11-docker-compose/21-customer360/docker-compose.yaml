@@ -27,10 +27,10 @@ version: "2.4"
 services:
   pingfederate:
     image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingfederate:${PING_IDENTITY_DEVOPS_TAG}
-    #environment:
-    #  - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
-    #  - SERVER_PROFILE_PATH=customer360/pingfederate
-    #  - SERVER_PROFILE_BRANCH=GDO-282_solutions
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=customer360/pingfederate
+      - SERVER_PROFILE_BRANCH=GDO-282_solutions
     env_file:
       - ${HOME}/.pingidentity/devops
     ports:
@@ -40,15 +40,14 @@ services:
       - pingnet
     volumes:
       - pingfederate-out:/opt/out
-      - ${HOME}/projects/devops/pingidentity-server-profiles/customer360/pingfederate:/opt/in
     #  - ${HOME}/projects/devops/pingidentity-server-profiles/baseline/pingfederate:/opt/in
 
   pingdirectory:
     image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingdirectory:${PING_IDENTITY_DEVOPS_TAG}
-    #environment:
-    #  - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
-    #  - SERVER_PROFILE_PATH=customer360/pingdirectory
-    #  - SERVER_PROFILE_BRANCH=GDO-282_solutions
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=customer360/pingdirectory
+      - SERVER_PROFILE_BRANCH=GDO-282_solutions
     env_file:
       - ${HOME}/.pingidentity/devops
     ulimits:
@@ -66,7 +65,6 @@ services:
       - pingnet
     volumes:
       - pingdirectory-out:/opt/out
-      - ${HOME}/projects/devops/pingidentity-server-profiles/customer360/pingdirectory:/opt/in
     #  - ${HOME}/projects/devops/pingidentity-server-profiles/baseline/pingdirectory:/opt/in
 
   pingdataconsole:
