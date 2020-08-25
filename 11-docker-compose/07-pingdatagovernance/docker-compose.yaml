@@ -81,4 +81,15 @@ services:
   pingdataconsole:
     image: ${PING_IDENTITY_DEVOPS_REGISTRY}/pingdataconsole:${PING_IDENTITY_DEVOPS_TAG}
     ports:
-"docker-compose.yaml" 95L, 2956C                                                                                                                                                                    1,1           Top
+      - "9443:8443"
+    networks:
+      - pingnet-internal
+
+networks:
+    pingnet-internal:
+    pingnet-dmz:
+
+volumes:
+  pingdatagovernance-out:
+  pingdatagovernancepap-out:
+  pingdirectory-out:
